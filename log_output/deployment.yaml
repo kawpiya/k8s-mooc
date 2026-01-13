@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: log-output-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: log-output-dep
+  template:
+    metadata:
+      labels:
+        app: log-output-dep
+    spec:
+      containers:
+      - name: random-string
+        image: random-string-app:1.1
+        imagePullPolicy: IfNotPresent
