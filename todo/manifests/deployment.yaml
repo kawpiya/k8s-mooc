@@ -14,5 +14,8 @@ spec:
     spec:
       containers:
         - name: todo-app
-          image: todo-app:1.2
+          image: todo-app:1.5
           imagePullPolicy: Never
+          env:
+          - name: PORT
+            value: "9090"
