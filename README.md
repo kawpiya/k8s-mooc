@@ -9,3 +9,4 @@
 - [1.4](https://github.com/kawpiya/k8s-mooc/tree/1.4)
 - [1.5](https://github.com/kawpiya/k8s-mooc/tree/1.5)
 - [1.6](https://github.com/kawpiya/k8s-mooc/tree/1.6)
+- [1.7](https://github.com/kawpiya/k8s-mooc/tree/1.7)

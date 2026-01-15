@@ -6,13 +6,13 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: random-string
+      app: log-output-app
   template:
     metadata:
       labels:
-        app: random-string
+        app: log-output-app
     spec:
       containers:
-        - name: random-string
-          image: random-string-app:1.1
+        - name: log-output-app
+          image: log-output-app:1.7
           imagePullPolicy: Never
