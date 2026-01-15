@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: log-output-app-ingress
+  name: todo-app-ingress
 spec:
   rules:
   - http:
@@ -10,6 +10,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: log-output-app-svc
+            name: todo-app-svc
             port:
               number: 2345
