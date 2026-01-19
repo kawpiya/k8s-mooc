@@ -38,12 +38,32 @@ func main() {
 		currentTimestamp := time.Now().Format(time.RFC3339)
 		w.Write([]byte(currentTimestamp + ": " + appRandomString))
 	})
-	log.Fatal(http.ListenAndServe(addr, nil))
+
+	// Open file in append mode
+	file, err := os.OpenFile(
+		"/logs/output.log",
+		os.O_APPEND|os.O_CREATE|os.O_WRONLY,
+		0644,
+	)
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
 
 	ticker := time.NewTicker(5 * time.Second)
 	defer ticker.Stop()
 
 	for t := range ticker.C {
-		fmt.Printf("%s: %s\n", t.Format(time.RFC3339), appRandomString)
+		line := fmt.Sprintf("[%s] %s\n", t.Format(time.RFC3339), appRandomString)
+
+		// Write to stdout
+		fmt.Print("Written line: " + line)
+
+		// Append to file
+		if _, err := file.WriteString(line); err != nil {
+			panic(err)
+		}
 	}
+
+	log.Fatal(http.ListenAndServe(addr, nil))
 }

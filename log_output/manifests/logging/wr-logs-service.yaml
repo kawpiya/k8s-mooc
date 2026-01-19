@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: wr-logs-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: logs
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 9090

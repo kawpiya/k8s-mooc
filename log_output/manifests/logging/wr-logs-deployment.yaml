@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: log-wr-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: logs
+  template:
+    metadata:
+      labels:
+        app: logs
+    spec:
+      volumes: # Define volume
+        - name: shared-logs
+          emptyDir: {}
+      containers:
+        - name: write-logs-app
+          image: write-logs-app:1.10
+          volumeMounts: # Mount volume
+          - name: shared-logs
+            mountPath: /logs
+        - name: read-logs-app
+          image: read-logs-app:1.10
+          volumeMounts: # Mount volume
+          - name: shared-logs
+            mountPath: /logs
