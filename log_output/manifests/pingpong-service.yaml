@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: log-output-app-svc
+  name: ping-pong-app-svc
 spec:
   type: ClusterIP
   selector:
-    app: log-output-app # This is the app as declared in the deployment.
+    app: ping-pong-app # This is the app as declared in the deployment.
   ports:
-    - port: 2345
+    - port: 80
       protocol: TCP
       targetPort: 9090
