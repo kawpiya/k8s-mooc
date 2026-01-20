@@ -1,6 +1,7 @@
 package main
 
 import (
+	"html/template"
 	"io"
 	"log"
 	"net/http"
@@ -8,6 +9,7 @@ import (
 	"path/filepath"
 	"sync"
 	"time"
+	"unicode/utf8"
 )
 
 const (
@@ -86,15 +88,83 @@ func pageHandler(w http.ResponseWriter, r *http.Request) {
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Image Cache</title>
+	<title>Image + Text Submit</title>
+	<style>
+		body {
+			font-family: sans-serif;
+			max-width: 600px;
+			margin: 40px auto;
+		}
+		img {
+			max-width: 100%;
+			border-radius: 8px;
+			margin-bottom: 20px;
+		}
+		.counter {
+			font-size: 0.9em;
+			color: #555;
+		}
+	</style>
 </head>
 <body>
-	<h1>Image refreshes every 10 minutes</h1>
-	<img src="/image" alt="Cached Image">
-	<p>DevOps with Kubernetes 2026</p>
+
+<h2>Cached Image (updates every 10 minutes)</h2>
+
+<img src="/image" alt="Cached Picsum Image">
+
+<h3>Enter text (max 140 characters)</h3>
+
+<form method="POST" action="/submit">
+	<textarea
+		name="message"
+		rows="4"
+		style="width: 100%;"
+		maxlength="140"
+		oninput="updateCounter(this)"
+		required
+	></textarea>
+
+	<div class="counter" id="counter">
+		140 characters remaining
+	</div>
+
+	<br>
+	<button type="submit">Submit</button>
+</form>
+
+<ul>
+	<li>Learn Docker</li>
+	<li>Learn Kubernetes</li>
+</ul>
+<script>
+	function updateCounter(el) {
+		const remaining = 140 - el.value.length;
+		document.getElementById("counter").textContent =
+			remaining + " characters remaining";
+	}
+</script>
+
 </body>
 </html>
 `))
+}
+
+func submitHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	msg := r.FormValue("message")
+
+	if utf8.RuneCountInString(msg) > 140 {
+		http.Error(w, "Message exceeds 140 characters", http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/html")
+	w.Write([]byte("<h3>Message received:</h3><p>" +
+		template.HTMLEscapeString(msg) + "</p><a href='/'>Back</a>"))
 }
 
 func main() {
@@ -102,6 +172,7 @@ func main() {
 
 	http.HandleFunc("/", pageHandler)
 	http.HandleFunc("/image", imageHandler)
+	http.HandleFunc("/submit", submitHandler)
 
 	log.Println("Server running at http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))

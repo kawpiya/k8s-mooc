@@ -18,7 +18,7 @@ spec:
             claimName: images-claim
       containers:
         - name: image-cache-app
-          image: image-cache-app:1.12
+          image: image-cache-app:1.13
           volumeMounts:
           - name: shared-images
             mountPath: /cache
