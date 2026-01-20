@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ping-pong-ingress
+spec:
+  ingressClassName: traefik
+  rules:
+  - http:
+      paths:
+      # Route /pingpong to the Writer App (Port 9091)
+      - path: /pingpong
+        pathType: Prefix
+        backend:
+          service:
+            name: ping-pong-svc
+            port:
+              number: 9091
+      # Route everything else to the Reader App (Port 80 -> 9090)
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ping-pong-svc
+            port:
+              number: 80

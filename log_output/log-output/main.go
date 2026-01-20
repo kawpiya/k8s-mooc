@@ -1,0 +1,63 @@
+package main
+
+import (
+	"bufio"
+	"crypto/rand"
+	"encoding/hex"
+	"fmt"
+	"log"
+	"net/http"
+	"os"
+	"time"
+)
+
+func generateRandomString() (string, error) {
+	b := make([]byte, 16)
+	if _, err := rand.Read(b); err != nil {
+		return "", err
+	}
+	return hex.EncodeToString(b), nil
+}
+
+func main() {
+	appRandomString, err := generateRandomString()
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("Application started")
+	fmt.Println("Random string:", appRandomString)
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "9090"
+	}
+	addr := ":" + port
+	log.Printf("Starting server on %s\n", addr)
+
+	http.HandleFunc("/", func(w http.ResponseWriter, _ *http.Request) {
+		file, err := os.Open("/logs/output.log")
+		if err != nil {
+			http.Error(w, "Failed to read file", http.StatusInternalServerError)
+			return
+		}
+		defer file.Close()
+		scanner := bufio.NewScanner(file)
+		line := ""
+		if scanner.Scan() {
+			line = scanner.Text()
+			fmt.Println(line)
+		} else {
+			http.Error(w, "File is empty", http.StatusInternalServerError)
+			return
+		}
+
+		if err := scanner.Err(); err != nil {
+			panic(err)
+		}
+		currentTimestamp := time.Now().Format(time.RFC3339)
+		output := fmt.Sprintf("%s: %s\n%s", currentTimestamp, appRandomString, line)
+		w.Write([]byte(output))
+	})
+	log.Fatal(http.ListenAndServe(addr, nil))
+}
