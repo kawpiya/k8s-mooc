@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: image-cache-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: image-cache-app
+  template:
+    metadata:
+      labels:
+        app: image-cache-app
+    spec:
+      volumes:
+        - name: shared-images
+          persistentVolumeClaim:
+            claimName: images-claim
+      containers:
+        - name: image-cache-app
+          image: image-cache-app:1.12
+          volumeMounts:
+          - name: shared-images
+            mountPath: /cache
