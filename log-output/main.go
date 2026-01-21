@@ -1,10 +1,10 @@
 package main
 
 import (
-	"bufio"
 	"crypto/rand"
 	"encoding/hex"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -35,26 +35,46 @@ func main() {
 	addr := ":" + port
 	log.Printf("Starting server on %s\n", addr)
 
-	http.HandleFunc("/", func(w http.ResponseWriter, _ *http.Request) {
-		file, err := os.Open("/logs/output.log")
-		if err != nil {
-			http.Error(w, "Failed to read file", http.StatusInternalServerError)
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		// file, err := os.Open("/logs/output.log")
+		// if err != nil {
+		// 	http.Error(w, "Failed to read file", http.StatusInternalServerError)
+		// 	return
+		// }
+		// defer file.Close()
+		// scanner := bufio.NewScanner(file)
+		// line := ""
+		// if scanner.Scan() {
+		// 	line = scanner.Text()
+		// 	fmt.Println(line)
+		// } else {
+		// 	http.Error(w, "File is empty", http.StatusInternalServerError)
+		// 	return
+		// }
+
+		// if err := scanner.Err(); err != nil {
+		// 	panic(err)
+		// }
+
+		if r.URL.Path != "/" {
+			http.NotFound(w, r)
 			return
 		}
-		defer file.Close()
-		scanner := bufio.NewScanner(file)
-		line := ""
-		if scanner.Scan() {
-			line = scanner.Text()
-			fmt.Println(line)
-		} else {
-			http.Error(w, "File is empty", http.StatusInternalServerError)
+		resp, err := http.Get("http://localhost:9091/pings")
+		if err != nil {
+			http.Error(w, "Failed to fetch data", http.StatusInternalServerError)
+			return
+		}
+		defer resp.Body.Close()
+
+		data, err := io.ReadAll(resp.Body)
+		if err != nil {
+			http.Error(w, "Failed to read data", http.StatusInternalServerError)
 			return
 		}
 
-		if err := scanner.Err(); err != nil {
-			panic(err)
-		}
+		line := string(data)
+
 		currentTimestamp := time.Now().Format(time.RFC3339)
 		output := fmt.Sprintf("%s: %s\n%s", currentTimestamp, appRandomString, line)
 		w.Write([]byte(output))
