@@ -16,3 +16,4 @@
 - [1.11](https://github.com/kawpiya/k8s-mooc/tree/1.11)
 - [1.12](https://github.com/kawpiya/k8s-mooc/tree/1.12)
 - [1.13](https://github.com/kawpiya/k8s-mooc/tree/1.13)
+- [2.1](https://github.com/kawpiya/k8s-mooc/tree/2.1)

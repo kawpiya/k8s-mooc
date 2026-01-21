@@ -60,9 +60,9 @@ func main() {
 			http.NotFound(w, r)
 			return
 		}
-		resp, err := http.Get("http://localhost:9091/pings")
+		resp, err := http.Get("http://ping-pong-app-svc:80/pings")
 		if err != nil {
-			http.Error(w, "Failed to fetch data", http.StatusInternalServerError)
+			http.Error(w, "Failed to fetch data:"+err.Error(), http.StatusInternalServerError)
 			return
 		}
 		defer resp.Body.Close()

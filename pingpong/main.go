@@ -15,7 +15,7 @@ func main() {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "9091"
+		port = "9090"
 	}
 	addr := ":" + port
 	log.Printf("Starting server on %s\n", addr)
