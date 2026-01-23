@@ -1,15 +1,15 @@
 package main
 
 import (
-	"html/template"
+	"encoding/json"
 	"io"
 	"log"
 	"net/http"
 	"os"
 	"path/filepath"
 	"sync"
+	"text/template"
 	"time"
-	"unicode/utf8"
 )
 
 const (
@@ -83,8 +83,22 @@ func imageHandler(w http.ResponseWriter, r *http.Request) {
 
 // serve HTML page
 func pageHandler(w http.ResponseWriter, r *http.Request) {
+
+	resp, err := http.Get("http://localhost:9090/todos")
+	if err != nil {
+		http.Error(w, "Failed to fetch data:"+err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer resp.Body.Close()
+
+	var todos []string
+	if err := json.NewDecoder(resp.Body).Decode(&todos); err != nil {
+		http.Error(w, "Invalid response", http.StatusInternalServerError)
+		return
+	}
+
 	w.Header().Set("Content-Type", "text/html")
-	w.Write([]byte(`
+	var pageTmpl = template.Must(template.New("page").Parse(`
 <!DOCTYPE html>
 <html>
 <head>
@@ -107,16 +121,12 @@ func pageHandler(w http.ResponseWriter, r *http.Request) {
 	</style>
 </head>
 <body>
-
 <h2>Cached Image (updates every 10 minutes)</h2>
-
 <img src="/image" alt="Cached Picsum Image">
-
 <h3>Enter text (max 140 characters)</h3>
-
-<form method="POST" action="/submit">
+<form method="POST" action="/todos">
 	<textarea
-		name="message"
+		name="todo"
 		rows="4"
 		style="width: 100%;"
 		maxlength="140"
@@ -132,47 +142,50 @@ func pageHandler(w http.ResponseWriter, r *http.Request) {
 	<button type="submit">Submit</button>
 </form>
 
+<h2>Todo List</h2>
+
 <ul>
-	<li>Learn Docker</li>
-	<li>Learn Kubernetes</li>
+{{range .}}
+	<li>{{.}}</li>
+{{else}}
+	<li>No todos found</li>
+{{end}}
 </ul>
-<script>
-	function updateCounter(el) {
-		const remaining = 140 - el.value.length;
-		document.getElementById("counter").textContent =
-			remaining + " characters remaining";
-	}
-</script>
 
 </body>
 </html>
 `))
-}
-
-func submitHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
-	msg := r.FormValue("message")
-
-	if utf8.RuneCountInString(msg) > 140 {
-		http.Error(w, "Message exceeds 140 characters", http.StatusBadRequest)
-		return
-	}
 
 	w.Header().Set("Content-Type", "text/html")
-	w.Write([]byte("<h3>Message received:</h3><p>" +
-		template.HTMLEscapeString(msg) + "</p><a href='/'>Back</a>"))
+	if err := pageTmpl.Execute(w, todos); err != nil {
+		http.Error(w, "Template error", 500)
+	}
 }
+
+// func submitHandler(w http.ResponseWriter, r *http.Request) {
+// 	if r.Method != http.MethodPost {
+// 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+// 		return
+// 	}
+
+// 	msg := r.FormValue("message")
+
+// 	if utf8.RuneCountInString(msg) > 140 {
+// 		http.Error(w, "Message exceeds 140 characters", http.StatusBadRequest)
+// 		return
+// 	}
+
+// 	w.Header().Set("Content-Type", "text/html")
+// 	w.Write([]byte("<h3>Message received:</h3><p>" +
+// 		template.HTMLEscapeString(msg) + "</p><a href='/'>Back</a>"))
+// }
 
 func main() {
 	startImageRefresher()
 
 	http.HandleFunc("/", pageHandler)
 	http.HandleFunc("/image", imageHandler)
-	http.HandleFunc("/submit", submitHandler)
+	// http.HandleFunc("/submit", submitHandler)
 
 	log.Println("Server running at http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
