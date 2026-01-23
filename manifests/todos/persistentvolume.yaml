@@ -1,6 +1,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
+  namespace: project
   name: images-pv
 spec:
   storageClassName: manual # this is the name you are using later to claim this volume
