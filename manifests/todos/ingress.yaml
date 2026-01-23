@@ -11,6 +11,13 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: image-cache-svc
+            name: todo-frontend-svc
+            port: 
+              number: 80
+      - path: /todos
+        pathType: Prefix
+        backend:
+          service:
+            name: todo-backend-svc
             port: 
               number: 80

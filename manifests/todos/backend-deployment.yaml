@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-backend-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-backend-app
+  template:
+    metadata:
+      labels:
+        app: todo-backend-app
+    spec:
+      containers:
+        - name: todo-backend-app
+          image: todo-backend-app:2.2

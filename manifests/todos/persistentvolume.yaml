@@ -18,4 +18,4 @@ spec:
         - key: kubernetes.io/hostname
           operator: In
           values:
-          - k3d-image-cache-server-0
+          - k3d-todo-server-0

@@ -84,7 +84,7 @@ func imageHandler(w http.ResponseWriter, r *http.Request) {
 // serve HTML page
 func pageHandler(w http.ResponseWriter, r *http.Request) {
 
-	resp, err := http.Get("http://localhost:9090/todos")
+	resp, err := http.Get("http://todo-backend-svc:80/todos")
 	if err != nil {
 		http.Error(w, "Failed to fetch data:"+err.Error(), http.StatusInternalServerError)
 		return
