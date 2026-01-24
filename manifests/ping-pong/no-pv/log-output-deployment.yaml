@@ -13,7 +13,20 @@ spec:
       labels:
         app: log-output-app
     spec:
+      volumes:
+        - name: config-volume
+          configMap:
+            name: example-configmap
       containers:
         - name: log-output-app
-          image: log-output-app:2.3
+          image: log-output-app:2.7
           imagePullPolicy: Never
+          env:
+          - name: MESSAGE
+            valueFrom:
+              configMapKeyRef:
+                name: example-configmap
+                key: MESSAGE
+          volumeMounts:
+          - name: config-volume
+            mountPath: /config

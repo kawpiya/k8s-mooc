@@ -76,7 +76,15 @@ func main() {
 		line := string(data)
 
 		currentTimestamp := time.Now().Format(time.RFC3339)
-		output := fmt.Sprintf("%s: %s\n%s", currentTimestamp, appRandomString, line)
+		message := os.Getenv("MESSAGE")
+
+		file, err := os.ReadFile("/config/information.txt")
+		if err != nil {
+			fmt.Println("Error reading file:", err)
+			return
+		}
+
+		output := fmt.Sprintf("file content: %s\nenv variable: MESSAGE=%s\n%s: %s\n%s", file, message, currentTimestamp, appRandomString, line)
 		w.Write([]byte(output))
 	})
 	log.Fatal(http.ListenAndServe(addr, nil))
