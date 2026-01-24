@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: project
+  name: todo-configmap
+data:
+  FRONTEND_PORT: '8080'
+  BACKEND_PORT: '9090'
+  BACKEND_URL: http://todo-backend-svc:80

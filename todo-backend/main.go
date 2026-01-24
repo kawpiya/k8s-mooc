@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"os"
 	"sync"
 )
 
@@ -49,6 +50,11 @@ func main() {
 		}
 	})
 
-	log.Println("Server running on :9090")
-	log.Fatal(http.ListenAndServe(":9090", nil))
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "9090"
+	}
+	addr := ":" + port
+	log.Printf("Starting server on %s\n", addr)
+	log.Fatal(http.ListenAndServe(addr, nil))
 }

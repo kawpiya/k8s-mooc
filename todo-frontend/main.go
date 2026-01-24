@@ -84,7 +84,8 @@ func imageHandler(w http.ResponseWriter, r *http.Request) {
 // serve HTML page
 func pageHandler(w http.ResponseWriter, r *http.Request) {
 
-	resp, err := http.Get("http://todo-backend-svc:80/todos")
+	url := os.Getenv("BACKEND_URL")
+	resp, err := http.Get(url + "/todos")
 	if err != nil {
 		http.Error(w, "Failed to fetch data:"+err.Error(), http.StatusInternalServerError)
 		return
@@ -187,6 +188,11 @@ func main() {
 	http.HandleFunc("/image", imageHandler)
 	// http.HandleFunc("/submit", submitHandler)
 
-	log.Println("Server running at http://localhost:8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	addr := ":" + port
+	log.Printf("Starting server on %s\n", addr)
+	log.Fatal(http.ListenAndServe(addr, nil))
 }

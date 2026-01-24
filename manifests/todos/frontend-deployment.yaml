@@ -19,7 +19,18 @@ spec:
             claimName: images-claim
       containers:
         - name: todo-frontend-app
-          image: todo-frontend-app:2.2
+          image: todo-frontend-app:2.6
+          env:
+          - name: PORT
+            valueFrom:
+              configMapKeyRef:
+                name: todo-configmap
+                key: FRONTEND_PORT
+          - name: BACKEND_URL
+            valueFrom:
+              configMapKeyRef:
+                name: todo-configmap
+                key: BACKEND_URL
           volumeMounts:
           - name: shared-images
             mountPath: /cache

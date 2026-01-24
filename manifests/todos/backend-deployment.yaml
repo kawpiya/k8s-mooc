@@ -15,4 +15,10 @@ spec:
     spec:
       containers:
         - name: todo-backend-app
-          image: todo-backend-app:2.2
+          image: todo-backend-app:2.6
+          env:
+          - name: PORT
+            valueFrom:
+              configMapKeyRef:
+                name: todo-configmap
+                key: BACKEND_PORT
