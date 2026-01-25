@@ -1,8 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: backend-app-dep
   namespace: project
-  name: todo-backend-dep
 spec:
   replicas: 1
   selector:
@@ -13,12 +13,29 @@ spec:
       labels:
         app: todo-backend-app
     spec:
+      initContainers:
+        - name: wait-for-db
+          image: busybox
+          command:
+            - sh
+            - -c
+            - |
+              until nc -z postgres-svc 5432; do
+                echo "waiting for postgres..."
+                sleep 2
+              done
       containers:
         - name: todo-backend-app
-          image: todo-backend-app:2.6
+          image: todo-backend-app:2.9
+          imagePullPolicy: Never
           env:
-          - name: PORT
-            valueFrom:
-              configMapKeyRef:
-                name: todo-configmap
-                key: BACKEND_PORT
+            - name: DATABASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: todo-configmap
+                  key: DATABASE_URL
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: todo-configmap
+                  key: BACKEND_PORT

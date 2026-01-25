@@ -19,7 +19,8 @@ spec:
             claimName: images-claim
       containers:
         - name: todo-frontend-app
-          image: todo-frontend-app:2.6
+          image: todo-frontend-app:2.8
+          imagePullPolicy: Never
           env:
           - name: PORT
             valueFrom:
