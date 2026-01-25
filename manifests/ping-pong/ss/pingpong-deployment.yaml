@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ping-pong-app-dep
+  namespace: exercises
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ping-pong-app
+  template:
+    metadata:
+      labels:
+        app: ping-pong-app
+    spec:
+      initContainers:
+        - name: wait-for-db
+          image: busybox
+          command:
+            - sh
+            - -c
+            - |
+              until nc -z postgres-svc 5432; do
+                echo "waiting for postgres..."
+                sleep 2
+              done
+      volumes:
+        - name: config-volume
+          configMap:
+            name: apps-configmap
+      containers:
+        - name: ping-pong-app
+          image: ping-pong-app:2.8
+          imagePullPolicy: Never
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: apps-configmap
+                  key: DATABASE_URL
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: apps-configmap
+                  key: PORT

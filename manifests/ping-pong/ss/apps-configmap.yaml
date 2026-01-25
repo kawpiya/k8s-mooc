@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: apps-configmap
+  namespace: exercises
+data:
+  MESSAGE: hello world
+  DATABASE_URL: "postgres://ping:pong@postgres-svc:5432/pingpong?sslmode=disable"
+  PORT: '9090'
+  information.txt: |
+    this text is from file

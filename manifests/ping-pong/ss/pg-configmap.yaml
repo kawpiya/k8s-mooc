@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pg-init-sql
+  namespace: exercises
+data:
+  init.sql: |
+    CREATE TABLE IF NOT EXISTS pingpong (
+      id SERIAL PRIMARY KEY,
+      count BIGINT NOT NULL
+    );
+
+    INSERT INTO pingpong (count)
+    SELECT 0
+    WHERE NOT EXISTS (SELECT 1 FROM pingpong);
