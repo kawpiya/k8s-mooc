@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: post-todos-cron
+  namespace: project
+spec:
+  schedule: "0 * * * *"   # every hour
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: curl
+              image: curlimages/curl:8.5.0
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  # 1. Get a random Wikipedia page
+                  REAL_URL=$(curl -Ls -o /dev/null -w %{url_effective} https://en.wikipedia.org/wiki/Special:Random)
+      
+                  echo "Posting URL: $REAL_URL"
+
+                  curl -X POST http://todo-backend-svc:80/todos \
+                    -H "Content-Type: application/x-www-form-urlencoded" \
+                    --data-urlencode "todo=$REAL_URL"
