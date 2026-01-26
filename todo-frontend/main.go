@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	imageURL  = "https://picsum.photos/id/237/400/400"
+	imageURL  = "https://picsum.photos/400/400"
 	cacheDir  = "cache"
 	imageName = "picsum.jpg"
 	interval  = 10 * time.Minute
