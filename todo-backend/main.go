@@ -53,6 +53,7 @@ func getTodosHandler(w http.ResponseWriter, r *http.Request) {
 func createTodoHandler(w http.ResponseWriter, r *http.Request) {
 	text := r.FormValue("todo")
 	if text == "" || len(text) > 140 {
+		log.Println("Todo must be 1–140 characters")
 		http.Error(w, "Todo must be 1–140 characters", http.StatusBadRequest)
 		return
 	}
@@ -61,10 +62,12 @@ func createTodoHandler(w http.ResponseWriter, r *http.Request) {
 		INSERT INTO todos(title) VALUES ($1)`, text)
 
 	if err != nil {
+		log.Printf("Database error: %v\n", err)
 		http.Error(w, "Database error", http.StatusInternalServerError)
 		return
 	}
 
+	log.Printf("Created todo: %s\n", text)
 	// Redirect back to page (prevents duplicate submit on refresh)
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
