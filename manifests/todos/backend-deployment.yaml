@@ -26,7 +26,7 @@ spec:
               done
       containers:
         - name: todo-backend-app
-          image: todo-backend-app:2.9
+          image: todo-backend-app:2.10
           imagePullPolicy: Never
           env:
             - name: DATABASE_URL
