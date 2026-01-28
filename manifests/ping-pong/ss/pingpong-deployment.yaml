@@ -30,8 +30,14 @@ spec:
             name: apps-configmap
       containers:
         - name: ping-pong-app
-          image: europe-north1-docker.pkg.dev/dwk-gke-485610/my-repo/ping-pong-app:2.8
+          image: europe-north1-docker.pkg.dev/dwk-gke-485610/my-repo/ping-pong-app:3.0
           imagePullPolicy: Always
+          readinessProbe:
+            httpGet:
+              path: /pingpong
+              port: 9090    # Note: Use the container port, usually matches targetPort
+            initialDelaySeconds: 10
+            periodSeconds: 5
           env:
             - name: DATABASE_URL
               valueFrom:
