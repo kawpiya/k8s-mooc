@@ -19,8 +19,8 @@ spec:
             name: apps-configmap
       containers:
         - name: log-output-app
-          image: log-output-app:2.7
-          imagePullPolicy: Never
+          image: europe-north1-docker.pkg.dev/dwk-gke-485610/my-repo/log-output-app:2.7
+          imagePullPolicy: Always
           volumeMounts:
             - name: config-volume
               mountPath: /config

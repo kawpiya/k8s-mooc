@@ -4,7 +4,7 @@ metadata:
   namespace: exercises
   name: log-output-app-svc
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   selector:
     app: log-output-app # This is the app as declared in the deployment.
   ports:

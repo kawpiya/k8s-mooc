@@ -30,8 +30,8 @@ spec:
             name: apps-configmap
       containers:
         - name: ping-pong-app
-          image: ping-pong-app:2.8
-          imagePullPolicy: Never
+          image: europe-north1-docker.pkg.dev/dwk-gke-485610/my-repo/ping-pong-app:2.8
+          imagePullPolicy: Always
           env:
             - name: DATABASE_URL
               valueFrom:
