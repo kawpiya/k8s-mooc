@@ -4,7 +4,7 @@ metadata:
   namespace: exercises
   name: ping-pong-app-svc
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: ping-pong-app # This is the app as declared in the deployment.
   ports:

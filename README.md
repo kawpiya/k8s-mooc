@@ -33,6 +33,7 @@
 - [3.1](https://github.com/kawpiya/k8s-mooc/tree/3.1)
 - [3.2](https://github.com/kawpiya/k8s-mooc/tree/3.2)
 - [3.3](https://github.com/kawpiya/k8s-mooc/tree/3.3)
+- [3.4](https://github.com/kawpiya/k8s-mooc/tree/3.4)
 
 ### Chapter 5
 

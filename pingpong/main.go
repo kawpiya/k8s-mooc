@@ -38,11 +38,6 @@ func main() {
 	addr := ":" + port
 	log.Printf("Starting server on %s\n", addr)
 
-	rootHandler := func(w http.ResponseWriter, r *http.Request) {
-		// send 200 OK
-		w.WriteHeader(http.StatusOK)
-	}
-
 	pingPongHandler := func(w http.ResponseWriter, r *http.Request) {
 		var count int64
 
@@ -75,8 +70,7 @@ func main() {
 		fmt.Fprintf(w, "Ping / Pongs: %d\n", count)
 	}
 
-	http.HandleFunc("/", rootHandler)
-	http.HandleFunc("/pingpong", pingPongHandler)
+	http.HandleFunc("/", pingPongHandler)
 	http.HandleFunc("/pings", pingsHandler)
 
 	log.Fatal(http.ListenAndServe(addr, nil))
