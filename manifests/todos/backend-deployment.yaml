@@ -26,8 +26,8 @@ spec:
               done
       containers:
         - name: todo-backend-app
-          image: todo-backend-app:2.10
-          imagePullPolicy: Never
+          image: europe-north1-docker.pkg.dev/dwk-gke-485610/my-repo/todo-backend-app:2.11
+          imagePullPolicy: Always
           env:
             - name: DATABASE_URL
               valueFrom:

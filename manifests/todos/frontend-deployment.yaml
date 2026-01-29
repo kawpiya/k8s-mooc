@@ -19,8 +19,8 @@ spec:
             claimName: images-claim
       containers:
         - name: todo-frontend-app
-          image: todo-frontend-app:2.10
-          imagePullPolicy: Never
+          image: europe-north1-docker.pkg.dev/dwk-gke-485610/my-repo/todo-frontend-app:2.10
+          imagePullPolicy: Always
           env:
           - name: PORT
             valueFrom:

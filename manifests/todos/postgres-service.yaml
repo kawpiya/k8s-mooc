@@ -4,6 +4,7 @@ metadata:
   name: postgres-svc
   namespace: project
 spec:
+  type: LoadBalancer
   ports:
     - port: 5432
   selector:
