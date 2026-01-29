@@ -32,6 +32,7 @@
 ### Chapter 4
 - [3.1](https://github.com/kawpiya/k8s-mooc/tree/3.1)
 - [3.2](https://github.com/kawpiya/k8s-mooc/tree/3.2)
+- [3.3](https://github.com/kawpiya/k8s-mooc/tree/3.3)
 
 ### Chapter 5
 
