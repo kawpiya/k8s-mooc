@@ -10,7 +10,7 @@ env:
   REGISTRY: europe-north1-docker.pkg.dev
   REPOSITORY: my-repo
   IMAGE: todo-backend-app
-  SERVICE: todo-backend-svc
+  DEPLOYMENT: backend-app-dep
   BRANCH: ${{ github.ref_name }}
 
 jobs:
