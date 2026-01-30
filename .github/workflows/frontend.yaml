@@ -17,24 +17,15 @@ jobs:
   build-publish-deploy:
     name: Build, Publish and Deploy
     runs-on: ubuntu-latest
+    environment: Configure gke
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Debug secret presence
-        run: |
-          if [ -z "${{ secrets.GKE_SA_KEY }}" ]; then
-            echo "❌ GKE_SA_KEY is EMPTY"
-            exit 1
-          else
-            echo "✅ GKE_SA_KEY is present"
-            echo "${{ secrets.GKE_SA_KEY }}" | jq -r '.type'
-          fi
-
       - uses: google-github-actions/auth@v2
         with:
-          credentials_json: ${{ secrets.GKE_SA_KEY }}
+          credentials_json: '${{ secrets.GKE_SA_KEY }}'
 
       - name: 'Set up Cloud SDK'
         uses: google-github-actions/setup-gcloud@v2
