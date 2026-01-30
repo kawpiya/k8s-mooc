@@ -1,0 +1,21 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - manifests/todos/1-project-ns.yaml
+  - manifests/todos/configmap.yaml
+  - manifests/todos/backend-deployment.yaml
+  - manifests/todos/persistentvolumeclaim.yaml
+  - manifests/todos/frontend-deployment.yaml
+  - manifests/todos/backend-service.yaml
+  - manifests/todos/frontend-service.yaml
+  - manifests/todos/pg-configmap.yaml
+  - manifests/todos/postgres-sset.yaml
+  - manifests/todos/postgres-service.yaml
+  - manifests/todos/cron-job.yaml
+  - manifests/todos/gateway.yaml
+  - manifests/todos/route.yaml
+images:
+  - name: PROJECT/BACKEND_IMAGE
+    newName: europe-north1-docker.pkg.dev/dwk-gke-485610/my-repo/todo-backend-app:2.11
+  - name: PROJECT/FRONTEND_IMAGE
+    newName: europe-north1-docker.pkg.dev/dwk-gke-485610/my-repo/todo-frontend-app:2.10

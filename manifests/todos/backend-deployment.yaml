@@ -26,7 +26,7 @@ spec:
               done
       containers:
         - name: todo-backend-app
-          image: europe-north1-docker.pkg.dev/dwk-gke-485610/my-repo/todo-backend-app:2.11
+          image: PROJECT/BACKEND_IMAGE
           imagePullPolicy: Always
           env:
             - name: DATABASE_URL
