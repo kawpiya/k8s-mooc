@@ -1,0 +1,43 @@
+name: Delete environment on branch removal
+
+on:
+  delete:
+
+env:
+  PROJECT_ID: ${{ secrets.GKE_PROJECT }}
+  GKE_CLUSTER: todos-cluster
+  GKE_ZONE: europe-north1-b
+
+jobs:
+  delete-namespace:
+    if: github.event.ref_type == 'branch'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GKE_SA_KEY }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Get GKE credentials
+        uses: google-github-actions/get-gke-credentials@v2
+        with:
+          cluster_name: ${{ env.GKE_CLUSTER }}
+          project_id: ${{ env.PROJECT_ID }}
+          location: ${{ env.GKE_ZONE }}
+
+      - name: Delete Kubernetes namespace
+        run: |-
+          BRANCH_NAME="${{ github.event.ref }}"
+
+          if [ "$BRANCH_NAME" = "main" ]; then
+            echo "Skipping namespace deletion for main branch"
+            exit 0
+          fi
+
+          NAMESPACE="$BRANCH_NAME"
+          echo "Deleting namespace: $NAMESPACE"
+          kubectl delete namespace "$NAMESPACE" --ignore-not-found
