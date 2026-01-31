@@ -38,6 +38,31 @@
 - [3.6](https://github.com/kawpiya/k8s-mooc/tree/3.6)
 - [3.7](https://github.com/kawpiya/k8s-mooc/tree/3.7)
 - [3.8](https://github.com/kawpiya/k8s-mooc/tree/3.8)
+- [3.9](https://github.com/kawpiya/k8s-mooc/tree/3.9)
+
+#### Postgres with PVs
+##### Pros
+ - Full control over the installation, including config.
+ - Lower cost.
+
+##### Cons
+ - Have to manage ops (backups, recovery, failover etc.), so can be unreliable.
+ - Storage is node and zone constrained.
+ - Data loss with misconfigurations.
+
+#### DBaaS
+##### Pros
+ - Fully manages no Ops.
+ - Runs outside K8s.
+ - Scalability and performance built-in by experts.
+ - SLA guarantees.
+ - Multiple AZ support.
+
+##### Cons
+ - Possible vendor lock in
+ - High latency possible since it can be outside cluster network.
+
+There is bit of middle ground to reduce ops burden by using a Postgres operator like CloudNativePg, Zalando/postgres-operator etc. But still there are cons to be aware of like handling node/disk failures, still have to monitor.
 
 ### Chapter 5
 
